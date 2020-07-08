@@ -2,3 +2,5 @@
 ## explicit
 github.com/pquerna/cachecontrol
 github.com/pquerna/cachecontrol/cacheobject
+# github.com/stretchr/testify v1.6.1
+## explicit
