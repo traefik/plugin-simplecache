@@ -1,7 +1,7 @@
 displayName: Simple Cache
 summary: Simple cache plugin middleware caches responses on disk.
 type: middleware
-import: github.com/containous/plugin-simplecache
+import: github.com/traefik/plugin-simplecache
 compatibility: TODO
 testData:
   path: /tmp
