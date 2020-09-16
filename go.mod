@@ -1,4 +1,4 @@
-module github.com/containous/plugin-simplecache
+module github.com/traefik/plugin-simplecache
 
 go 1.14
 

@@ -14,7 +14,7 @@ Static:
   token="xxx"
 
 [experimental.plugins.cache]
-  modulename = "github.com/containous/plugin-simplecache"
+  modulename = "github.com/traefik/plugin-simplecache"
   version = "v0.1.0"
 ```
 
