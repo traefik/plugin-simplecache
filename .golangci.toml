@@ -34,6 +34,8 @@
     "testpackage",
     "bodyclose",
     "goerr113",
+    "nlreturn",
+    "exhaustivestruct",
   ]
 
 [issues]

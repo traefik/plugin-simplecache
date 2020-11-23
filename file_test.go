@@ -88,7 +88,7 @@ func TestFileCache_ConcurrentAccess(t *testing.T) {
 		for {
 			err = fc.Set(testCacheKey, cacheContent, time.Second)
 			if err != nil {
-				panic(fmt.Errorf("unexpected cache set error: %v", err))
+				panic(fmt.Errorf("unexpected cache set error: %w", err))
 			}
 
 			select {
