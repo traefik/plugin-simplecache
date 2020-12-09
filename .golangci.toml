@@ -31,11 +31,13 @@
 [linters]
   enable-all = true
   disable = [
-    "testpackage",
     "bodyclose",
     "goerr113",
     "nlreturn",
     "exhaustivestruct",
+    "testpackage",
+    "paralleltest",
+    "tparallel",
   ]
 
 [issues]
