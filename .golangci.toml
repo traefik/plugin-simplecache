@@ -31,6 +31,11 @@
 [linters]
   enable-all = true
   disable = [
+    "golint", # deprecated
+    "scopelint", # deprecated
+    "interfacer", # deprecated
+    "maligned", # deprecated
+    "cyclop",
     "bodyclose",
     "goerr113",
     "nlreturn",
@@ -38,6 +43,8 @@
     "testpackage",
     "paralleltest",
     "tparallel",
+    "gomnd",
+    "wrapcheck",
   ]
 
 [issues]

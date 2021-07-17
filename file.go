@@ -64,7 +64,7 @@ func (c *fileCache) vacuum(interval time.Duration) {
 			f, err := os.Open(filepath.Clean(path))
 			if err != nil {
 				// Just skip the file in this case.
-				return nil
+				return nil // nolint:nilerr // skip
 			}
 			if n, err := f.Read(t[:]); err != nil && n != 8 {
 				return nil

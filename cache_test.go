@@ -81,15 +81,17 @@ func TestCache_ServeHTTP(t *testing.T) {
 	}
 }
 
-func createTempDir(t testing.TB) string {
+func createTempDir(tb testing.TB) string {
+	tb.Helper()
+
 	dir, err := ioutil.TempDir("./", "example")
 	if err != nil {
-		t.Fatal(err)
+		tb.Fatal(err)
 	}
 
-	t.Cleanup(func() {
+	tb.Cleanup(func() {
 		if err = os.RemoveAll(dir); err != nil {
-			t.Fatal(err)
+			tb.Fatal(err)
 		}
 	})
 
