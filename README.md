@@ -10,9 +10,6 @@ The following snippet shows how to configure this plugin with the File provider 
 Static:
 
 ```toml
-[pilot]
-  token="xxx"
-
 [experimental.plugins.cache]
   modulename = "github.com/traefik/plugin-simplecache"
   version = "v0.2.1"
