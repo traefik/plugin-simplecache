@@ -51,6 +51,10 @@ actual cache time will always be lower or equal to this.
 *Default: 600*
 
 The number of seconds to wait between cache cleanup runs.
+
+A value of -1 disables cleanup. It means stale records won't be cleaned up so if you
+don't limit yourself to a fixed set of paths that is managed by this plugin you risk
+filling up your cache filesystem. But it avoids issue [#21](https://github.com/traefik/plugin-simplecache/issues/21)
 	
 #### Add Status Header (`addStatusHeader`)
 

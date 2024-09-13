@@ -37,7 +37,9 @@ func newFileCache(path string, vacuum time.Duration) (*fileCache, error) {
 		pm:   &pathMutex{lock: map[string]*fileLock{}},
 	}
 
-	go fc.vacuum(vacuum)
+	if vacuum > 0 * time.Second {
+		go fc.vacuum(vacuum)
+	}
 
 	return fc, nil
 }

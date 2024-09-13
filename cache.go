@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -34,6 +35,7 @@ const (
 	cacheHitStatus   = "hit"
 	cacheMissStatus  = "miss"
 	cacheErrorStatus = "error"
+	cleanupDisabled  = -1
 )
 
 type cache struct {
@@ -49,8 +51,8 @@ func New(_ context.Context, next http.Handler, cfg *Config, name string) (http.H
 		return nil, errors.New("maxExpiry must be greater or equal to 1")
 	}
 
-	if cfg.Cleanup <= 1 {
-		return nil, errors.New("cleanup must be greater or equal to 1")
+	if cfg.Cleanup <= 1 && cfg.Cleanup != cleanupDisabled {
+		return nil, fmt.Errorf("cleanup must be greater or equal to 1 or disabled %d", cleanupDisabled)
 	}
 
 	fc, err := newFileCache(cfg.Path, time.Duration(cfg.Cleanup)*time.Second)

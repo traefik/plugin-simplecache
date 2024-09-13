@@ -26,9 +26,14 @@ func TestNew(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "should error if cleanup <= 1",
+			name:    "should error if cleanup <= 1 and not -1",
 			cfg:     &Config{Path: os.TempDir(), MaxExpiry: 300, Cleanup: 1},
 			wantErr: true,
+		},
+		{
+			name:    "should not error if cleanup == -1",
+			cfg:     &Config{Path: os.TempDir(), MaxExpiry: 300, Cleanup: -1},
+			wantErr: false,
 		},
 		{
 			name:    "should be valid",
@@ -43,6 +48,9 @@ func TestNew(t *testing.T) {
 
 			if test.wantErr && err == nil {
 				t.Fatal("expected error on bad regexp format")
+			}
+			if !test.wantErr && err != nil {
+				t.Fatalf("did not expect error but got %s", err)
 			}
 		})
 	}
