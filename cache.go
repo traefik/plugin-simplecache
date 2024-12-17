@@ -2,10 +2,13 @@
 package plugin_simplecache
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"time"
 
@@ -168,4 +171,19 @@ func (rw *responseWriter) Write(p []byte) (int, error) {
 func (rw *responseWriter) WriteHeader(s int) {
 	rw.status = s
 	rw.ResponseWriter.WriteHeader(s)
+}
+
+func (rw *responseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	hijacker, ok := rw.ResponseWriter.(http.Hijacker)
+	if !ok {
+		return nil, nil, fmt.Errorf("%T is not a http.Hijacker", rw.ResponseWriter)
+	}
+
+	return hijacker.Hijack()
+}
+
+func (rw *responseWriter) Flush() {
+	if flusher, ok := rw.ResponseWriter.(http.Flusher); ok {
+		flusher.Flush()
+	}
 }
