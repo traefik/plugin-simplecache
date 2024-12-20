@@ -58,3 +58,13 @@ The number of seconds to wait between cache cleanup runs.
 
 This determines if the cache status header `Cache-Status` will be added to the
 response headers. This header can have the value `hit`, `miss` or `error`.
+
+#### 	ConsiderUrlQuery (`considerUrlQuery`)
+
+*Default: false*
+
+This determines if a request URL's query parameters are used in the cache key. If
+this is set to `false`, the cached response for one request will be returned for
+subequent requests that differ only by their URL query parameters. If this is set
+to `true`, requests with different query parameters will have different cached
+responses stored.

@@ -56,7 +56,7 @@ func TestCache_ServeHTTP(t *testing.T) {
 		rw.WriteHeader(http.StatusOK)
 	}
 
-	cfg := &Config{Path: dir, MaxExpiry: 10, Cleanup: 20, AddStatusHeader: true}
+	cfg := &Config{Path: dir, MaxExpiry: 10, Cleanup: 20, AddStatusHeader: true, ConsiderUrlQuery: false}
 
 	c, err := New(context.Background(), http.HandlerFunc(next), cfg, "simplecache")
 	if err != nil {
@@ -69,7 +69,7 @@ func TestCache_ServeHTTP(t *testing.T) {
 	c.ServeHTTP(rw, req)
 
 	if state := rw.Header().Get("Cache-Status"); state != "miss" {
-		t.Errorf("unexprect cache state: want \"miss\", got: %q", state)
+		t.Errorf("unexpected cache state: want \"miss\", got: %q", state)
 	}
 
 	rw = httptest.NewRecorder()
@@ -77,7 +77,56 @@ func TestCache_ServeHTTP(t *testing.T) {
 	c.ServeHTTP(rw, req)
 
 	if state := rw.Header().Get("Cache-Status"); state != "hit" {
-		t.Errorf("unexprect cache state: want \"hit\", got: %q", state)
+		t.Errorf("unexpected cache state: want \"hit\", got: %q", state)
+	}
+
+	rw = httptest.NewRecorder()
+	// Check that the same request with a different URL query hits the same cache entry
+	c.ServeHTTP(rw, httptest.NewRequest(http.MethodGet, "http://localhost/some/path?queryParam=1", nil))
+
+	if state := rw.Header().Get("Cache-Status"); state != "hit" {
+		t.Errorf("unexpected cache state: want \"hit\", got: %q", state)
+	}
+
+}
+
+func TestCache_ServeHTTP_ConsiderUrlQuery(t *testing.T) {
+	dir := createTempDir(t)
+
+	next := func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Cache-Control", "max-age=20")
+		rw.WriteHeader(http.StatusOK)
+	}
+
+	cfg := &Config{Path: dir, MaxExpiry: 10, Cleanup: 20, AddStatusHeader: true, ConsiderUrlQuery: true}
+
+	c, err := New(context.Background(), http.HandlerFunc(next), cfg, "simplecache")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	testUrl := "http://localhost/some/path"
+	req := httptest.NewRequest(http.MethodGet, testUrl, nil)
+	rw := httptest.NewRecorder()
+
+	c.ServeHTTP(rw, req) // Add response to the cache
+	rw = httptest.NewRecorder()
+	c.ServeHTTP(rw, req)
+
+	if state := rw.Header().Get("Cache-Status"); state != "hit" {
+		t.Errorf("unexpected cache state: want \"hit\", got: %q", state)
+	}
+
+	rw = httptest.NewRecorder()
+	c.ServeHTTP(rw, httptest.NewRequest(http.MethodGet, testUrl+"?queryParam=1", nil))
+	if state := rw.Header().Get("Cache-Status"); state != "miss" {
+		t.Errorf("unexpected cache state: want \"miss\", got: %q", state)
+	}
+
+	rw = httptest.NewRecorder()
+	c.ServeHTTP(rw, httptest.NewRequest(http.MethodGet, testUrl+"?queryParam=2", nil))
+	if state := rw.Header().Get("Cache-Status"); state != "miss" {
+		t.Errorf("unexpected cache state: want \"miss\", got: %q", state)
 	}
 }
 
